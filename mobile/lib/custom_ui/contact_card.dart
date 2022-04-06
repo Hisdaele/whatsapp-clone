@@ -9,19 +9,38 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.grey.shade300,
-        radius: 30,
-        child: const Icon(
-          Icons.person,
-          size: 30,
-          color: Colors.white,
-        ),
+      leading: Stack(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.grey.shade300,
+            radius: 30,
+            child: const Icon(
+              Icons.person,
+              size: 50,
+              color: Colors.white,
+            ),
+          ),
+          Visibility(
+            visible: contact.isSelected,
+             child: Positioned(
+              bottom: 0,
+              right: 0,
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 11,
+                child: const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       title: Text(
         contact.name.isNotEmpty ? contact.name : contact.phoneNumber,
-        style: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
         contact.actus,
