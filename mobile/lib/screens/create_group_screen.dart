@@ -46,13 +46,15 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            const Text(
               'New Group',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              'Add a participant',
+              groupMembers.isEmpty
+                  ? 'Add a participant'
+                  : '${groupMembers.length} selected',
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -65,26 +67,29 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         children: [
           Visibility(
             visible: groupMembers.isNotEmpty,
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index) {
-                    final contact = groupMembers[index];
-                    return InkWell(
-                      child: ContactAvatar(contact: contact),
-                      onTap: () {
-                        groupMembers.remove(contact);
-                        contact.isSelected = false;
-                        setState(() {});
-                      },
-                    );
-                  },
-                  separatorBuilder: (_, index) => const SizedBox(
-                    width: 5,
-                  ),
-                  itemCount: groupMembers.length,
-                )),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, index) {
+                      final contact = groupMembers[index];
+                      return InkWell(
+                        child: ContactAvatar(contact: contact),
+                        onTap: () {
+                          groupMembers.remove(contact);
+                          contact.isSelected = false;
+                          setState(() {});
+                        },
+                      );
+                    },
+                    separatorBuilder: (_, index) => const SizedBox(
+                      width: 5,
+                    ),
+                    itemCount: groupMembers.length,
+                  )),
+            ),
           ),
           if (groupMembers.isNotEmpty) const Divider(),
           Expanded(

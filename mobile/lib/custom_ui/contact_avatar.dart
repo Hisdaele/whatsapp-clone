@@ -42,6 +42,7 @@ class ContactAvatar extends StatelessWidget {
         ),
         Text(
           contact.name.isNotEmpty ? contact.name : contact.phoneNumber,
+          style: TextStyle(fontSize: 12),
         ),
       ],
     );
