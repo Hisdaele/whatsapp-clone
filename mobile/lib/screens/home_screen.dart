@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp/pages/camera_page.dart';
 import 'package:whatsapp/pages/chat_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,12 +12,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late final _controller =
-      TabController(length: 4, vsync: this, initialIndex: 0);
+      TabController(length: 4, vsync: this, initialIndex: 1);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text("WhatsApp"),
         actions: [
@@ -72,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen>
       body: TabBarView(
         controller: _controller,
         children: const [
-          Text("Camera"),
+          CameraPage(),
           ChatPage(),
           Text("Status"),
           Text("Calls")
