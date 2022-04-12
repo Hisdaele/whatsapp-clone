@@ -1,9 +1,7 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:whatsapp/screens/camera_view_screen.dart';
+import 'package:whatsapp/screens/video_view_screen.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -17,6 +15,7 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController _cameraController;
   late Future _cameraValue;
+  bool _isRecording = false;
 
   @override
   void initState() {
@@ -60,15 +59,23 @@ class _CameraScreenState extends State<CameraScreen> {
                           size: 28,
                         ),
                       ),
-                      InkWell(
+                      GestureDetector(
+                        onLongPress: _startRecordingVideo,
+                        onLongPressUp: _stopRecordingVideo,
                         onTap: () {
-                          takePhoto(context);
+                          if (!_isRecording) _takePhoto(context);
                         },
-                        child: const Icon(
-                          Icons.panorama_fisheye,
-                          color: Colors.white,
-                          size: 70,
-                        ),
+                        child: _isRecording
+                            ? const Icon(
+                                Icons.radio_button_on,
+                                color: Colors.red,
+                                size: 80,
+                              )
+                            : const Icon(
+                                Icons.panorama_fisheye,
+                                color: Colors.white,
+                                size: 70,
+                              ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -100,7 +107,25 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  void takePhoto(BuildContext context) async {
+  void _stopRecordingVideo() async{
+    final file = await _cameraController.stopVideoRecording();
+    setState(() {
+      _isRecording = false;
+    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => VideoViewScreen(imagePath: file.path)));
+  }
+
+  void _startRecordingVideo() {
+    _cameraController.startVideoRecording();
+    setState(() {
+      _isRecording = true;
+    });
+  }
+
+  void _takePhoto(BuildContext context) async {
     final file = await _cameraController.takePicture();
     Navigator.push(
         context,
