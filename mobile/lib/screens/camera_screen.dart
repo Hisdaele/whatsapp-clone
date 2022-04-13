@@ -16,11 +16,14 @@ class _CameraScreenState extends State<CameraScreen> {
   late CameraController _cameraController;
   late Future _cameraValue;
   bool _isRecording = false;
+  bool _flashOn = false;
+  int _cameraPosition = 0; // 0 for Back and 1 for Front
 
   @override
   void initState() {
     super.initState();
-    _cameraController = CameraController(cameras[0], ResolutionPreset.high);
+    _cameraController =
+        CameraController(cameras[_cameraPosition], ResolutionPreset.high);
     _cameraValue = _cameraController.initialize();
   }
 
@@ -52,9 +55,18 @@ class _CameraScreenState extends State<CameraScreen> {
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.flash_off,
+                        onPressed: () {
+                          if (_flashOn) {
+                            _cameraController.setFlashMode(FlashMode.off);
+                          } else {
+                            _cameraController.setFlashMode(FlashMode.torch);
+                          }
+                          setState(() {
+                            _flashOn = !_flashOn;
+                          });
+                        },
+                        icon: Icon(
+                          _flashOn ? Icons.flash_on : Icons.flash_off,
                           color: Colors.white,
                           size: 28,
                         ),
@@ -79,7 +91,13 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                       IconButton(
                         onPressed: () {
+                          _cameraPosition = (_cameraPosition + 1) % 2;
+                          _cameraController =
+                              CameraController(cameras[_cameraPosition], ResolutionPreset.high);
+                          _cameraValue = _cameraController.initialize();
+                          setState(() {
 
+                          });
                         },
                         icon: const Icon(
                           Icons.flip_camera_ios,
