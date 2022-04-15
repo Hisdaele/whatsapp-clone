@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp/custom_ui/own_message_card.dart';
+import 'package:whatsapp/custom_ui/reply_card.dart';
 
 import '../models/chat.dart';
 
@@ -18,7 +20,6 @@ class _IndividualScreenState extends State<IndividualScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.cyan,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         titleSpacing: 0.0,
@@ -100,7 +101,30 @@ class _IndividualScreenState extends State<IndividualScreen> {
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: [
-            //Expanded(child: ListView()),
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/whatsappWallpaper.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 145,
+              child: ListView(
+                children: [
+                  OwnMessageCard(),
+                  ReplyCard(),
+                  OwnMessageCard(),
+                  ReplyCard(),
+                  OwnMessageCard(),
+                  ReplyCard(),
+                  OwnMessageCard(),
+                  ReplyCard(),
+                  OwnMessageCard(),
+                  OwnMessageCard(),
+                  ReplyCard(),
+                ],
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Row(
@@ -156,7 +180,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                       radius: 25,
                       child: IconButton(
                         color: Colors.white,
-                        icon: const Icon(Icons.mic),
+                        icon: Icon(hasText ? Icons.send: Icons.mic),
                         onPressed: () {},
                       ),
                     ),
