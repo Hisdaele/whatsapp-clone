@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:whatsapp/custom_ui/own_message_card.dart';
 import 'package:whatsapp/custom_ui/reply_card.dart';
 
@@ -16,6 +17,27 @@ class IndividualScreen extends StatefulWidget {
 class _IndividualScreenState extends State<IndividualScreen> {
   final messageController = TextEditingController();
   bool hasText = false;
+  late Socket _socket;
+  
+  void _connect(){
+    _socket = io('http://192.168.1.71:5000', {
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    _socket.connect();
+    _socket.onConnect((data){
+      print('Connected');
+    });
+    print(_socket.connected);
+    _socket.emit('/test', "Hello");
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _connect();
+  }
 
   @override
   Widget build(BuildContext context) {

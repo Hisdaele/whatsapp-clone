@@ -12,7 +12,7 @@ class OwnMessageCard extends StatelessWidget {
         BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 45),
         child: Card(
           elevation: 1,
-          color: Color(0xffdcf8c6),
+          color: const Color(0xffdcf8c6),
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -39,7 +39,7 @@ class OwnMessageCard extends StatelessWidget {
                     const SizedBox(
                       width: 5,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.done_all,
                       color: Colors.blue,
                     )
