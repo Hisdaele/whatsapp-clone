@@ -7,8 +7,11 @@ import '../models/chat.dart';
 
 class IndividualScreen extends StatefulWidget {
   final Chat chat;
+  final Chat sourceChat;
 
-  const IndividualScreen({Key? key, required this.chat}) : super(key: key);
+  const IndividualScreen(
+      {Key? key, required this.chat, required this.sourceChat})
+      : super(key: key);
 
   @override
   State<IndividualScreen> createState() => _IndividualScreenState();
@@ -17,26 +20,33 @@ class IndividualScreen extends StatefulWidget {
 class _IndividualScreenState extends State<IndividualScreen> {
   final messageController = TextEditingController();
   bool hasText = false;
-  late Socket _socket;
-  
-  void _connect(){
-    _socket = io('http://192.168.1.71:5000', {
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-    _socket.connect();
-    _socket.onConnect((data){
-      print('Connected');
-    });
-    print(_socket.connected);
-    _socket.emit('/test', "Hello");
-  }
-
+  late final Socket _socket;
 
   @override
   void initState() {
     super.initState();
     _connect();
+  }
+
+  void _connect() {
+    _socket = io('http://192.168.1.71:5000', {
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    _socket.connect();
+    _socket.onConnect((data) {
+      print('Connected');
+    });
+    print(_socket.connected);
+    _socket.emit('/signin', widget.sourceChat.id);
+  }
+
+  void sendMessage(String message, int sourceId, int targetId) {
+    _socket.emit("message", {
+      "message": message,
+      "sourceId": sourceId,
+      "targetId": targetId,
+    });
   }
 
   @override
@@ -202,8 +212,17 @@ class _IndividualScreenState extends State<IndividualScreen> {
                       radius: 25,
                       child: IconButton(
                         color: Colors.white,
-                        icon: Icon(hasText ? Icons.send: Icons.mic),
-                        onPressed: () {},
+                        icon: Icon(hasText ? Icons.send : Icons.mic),
+                        onPressed: () {
+                          if (hasText) {
+                            sendMessage(
+                              messageController.text,
+                              widget.sourceChat.id,
+                              widget.chat.id,
+                            );
+                            messageController.clear();
+                          }
+                        },
                       ),
                     ),
                   )
